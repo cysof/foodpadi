@@ -16,21 +16,33 @@ from rest_framework import serializers
 from .serializers import CustomTokenObtainPairSerializer
 
 class FarmPadiUserViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing FarmPadiUser instances.
+    """
     queryset = FarmPadiUser.objects.all()
     serializer_class = FarmPadiUserSerializer
     permission_classes = [IsAuthenticated]
 
 class ProfileViewSet(viewsets.ModelViewSet):
+    """
+    A viewset for viewing and editing Profile instances.
+    """
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]  
 
 class UserRegistrationView(generics.CreateAPIView):
+    """
+    A view for registering new users.
+    """
     queryset = FarmPadiUser.objects.all()
     serializer_class = FarmPadiUserRegistrationSerializer
     permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
+        """
+        Create a new user instance.
+        """
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -51,10 +63,16 @@ class UserRegistrationView(generics.CreateAPIView):
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
+    """
+    A view for obtaining a token pair.
+    """
     serializer_class = CustomTokenObtainPairSerializer
     permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
+        """
+        Obtain a token pair.
+        """
         serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
@@ -69,13 +87,23 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             }, status=status.HTTP_401_UNAUTHORIZED)
 
 
+
 class UserProfileView(generics.RetrieveUpdateAPIView):
+    """
+    A view for retrieving and updating the user's profile.
+    """
     serializer_class = FarmPadiUserSerializer
     
     def get_object(self):
+        """
+        Get the user's profile.
+        """
         return self.request.user
 
     def update(self, request, *args, **kwargs):
+        """
+        Update the user's profile.
+        """
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -90,7 +118,13 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
 
 
 class LogoutView(APIView):
+    """
+    A view for logging out.
+    """
     def post(self, request):
+        """
+        Log out.
+        """
         try:
             refresh_token = request.data["refresh"]
             token = RefreshToken(refresh_token)
@@ -105,7 +139,13 @@ class LogoutView(APIView):
 
 
 class ChangePasswordView(APIView):
+    """
+    A view for changing the user's password.
+    """
     def post(self, request):
+        """
+        Change the user's password.
+        """
         user = request.user
         old_password = request.data.get('old_password')
         new_password = request.data.get('new_password')
