@@ -69,16 +69,12 @@ class FarmPadiUserRegistrationSerializer(serializers.ModelSerializer):
         validated_data.pop('password_confirm')
         password = validated_data.pop('password')
         
-        with transaction.atomic():
-            user = FarmPadiUser.objects.create_user(
-                password=password,
-                **validated_data
-            )
-            # Create associated profile
-            Profile.objects.create(
-                user=user,
-                profile_type=user.account_type
-            )
+        # REMOVED MANUAL PROFILE CREATION - Let the signal handle it
+        user = FarmPadiUser.objects.create_user(
+            password=password,
+            **validated_data
+        )
+        # The signal will automatically create the profile
         return user
 
 

@@ -31,17 +31,20 @@ class FarmPadiUser(AbstractUser):
     is_superuser = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = ['email', 'username']
-    
+
     def save(self, *args, **kwargs):
-        if not self.pk:
-            self.profile_type = self.account_type
+        """
+        Save the user instance.
+        The signal will handle profile creation and set profile_type = account_type.
+        """
         super().save(*args, **kwargs)
-    
+
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
+
 
 class Profile(models.Model):
     PROFILE_TYPE_CHOICES = (
@@ -49,12 +52,10 @@ class Profile(models.Model):
         ('BUYER', 'Buyer'),
         ('TRANSPORTER', 'Transporter'),
     )
-    user = models.OneToOneField(FarmPadiUser, on_delete=models.CASCADE,related_name='profile')
+    user = models.OneToOneField(FarmPadiUser, on_delete=models.CASCADE, related_name='profile')
     profile_type = models.CharField(max_length=20, choices=PROFILE_TYPE_CHOICES)
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    
+
     def __str__(self):
         return f'Profile: {self.user.username}'
-    
-    

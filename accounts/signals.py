@@ -3,15 +3,15 @@ from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist
 from .models import FarmPadiUser, Profile
 
-
 @receiver(post_save, sender=FarmPadiUser)
-def handle_user_profile(sender, instance, created, **kwargs):
+def create_user_profile(sender, instance, created, **kwargs):
     """
-    Signal handler for ensuring a Profile is created for every new User.
-    Prevents duplicate profiles.
+    Signal handler for creating a Profile when a new User is created.
+    Automatically sets profile_type to match the user's selected account_type.
+    Only runs when user is first created, not on updates.
     """
-    try:
-        profile = instance.profile
-    except ObjectDoesNotExist:
-        # Only create a profile if one doesn't already exist
-        Profile.objects.create(user=instance, profile_type=instance.account_type)
+    if created:
+        Profile.objects.get_or_create(
+            user=instance,
+            defaults={'profile_type': instance.account_type}
+        )
