@@ -1,9 +1,10 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.exceptions import ObjectDoesNotExist
-from .models import User, Profile
+from .models import FarmPadiUser, Profile
 
-@receiver(post_save, sender=User)
+
+@receiver(post_save, sender=FarmPadiUser)
 def handle_user_profile(sender, instance, created, **kwargs):
     """
     Signal handler for ensuring a Profile is created for every new User.
