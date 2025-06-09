@@ -22,14 +22,15 @@ import django
 django.setup()
 
 User = get_user_model()
+phone = os.environ["DJANGO_SUPERUSER_PHONE"]
 username = os.environ["DJANGO_SUPERUSER_USERNAME"]
 email = os.environ["DJANGO_SUPERUSER_EMAIL"]
 password = os.environ["DJANGO_SUPERUSER_PASSWORD"]
 
 if not User.objects.filter(username=username).exists():
-    User.objects.create_superuser(username=username, email=email, password=password)
-    print("✅ Superuser created.")
+    User.objects.create_superuser(phone=phone, username=username, email=email, password=password)
+    print("✅ Superuser created with phone:", phone)
 else:
-    print("ℹ️ Superuser already exists.")
+    print("ℹ️ Superuser with phone", phone, "already exists.")
 EOF
 fi
