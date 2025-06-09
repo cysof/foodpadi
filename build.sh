@@ -22,15 +22,27 @@ import django
 django.setup()
 
 User = get_user_model()
-phone = os.environ["DJANGO_SUPERUSER_PHONE"]
-username = os.environ["DJANGO_SUPERUSER_USERNAME"]
+
+phone_number = os.environ["DJANGO_SUPERUSER_PHONE"]
 email = os.environ["DJANGO_SUPERUSER_EMAIL"]
 password = os.environ["DJANGO_SUPERUSER_PASSWORD"]
+first_name = os.environ.get("DJANGO_SUPERUSER_FIRSTNAME", "Admin")
+last_name = os.environ.get("DJANGO_SUPERUSER_LASTNAME", "User")
+account_type = os.environ.get("DJANGO_SUPERUSER_ACCOUNT_TYPE", "FARMER")
 
-if not User.objects.filter(username=username).exists():
-    User.objects.create_superuser(phone=phone, username=username, email=email, password=password)
-    print("✅ Superuser created with phone:", phone)
+if not User.objects.filter(phone_number=phone_number).exists():
+    User.objects.create_superuser(
+        phone_number=phone_number,
+        email=email,
+        password=password,
+        first_name=first_name,
+        last_name=last_name,
+        account_type=account_type,
+        is_staff=True,
+        is_superuser=True
+    )
+    print("✅ Superuser created with phone:", phone_number)
 else:
-    print("ℹ️ Superuser with phone", phone, "already exists.")
+    print("ℹ️ Superuser with phone", phone_number, "already exists.")
 EOF
 fi
