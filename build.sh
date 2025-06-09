@@ -1,14 +1,35 @@
 #!/usr/bin/env bash
 set -o errexit
 
+# Install dependencies
 pip install -r requirements.txt
 
+# Collect static files
 python manage.py collectstatic --no-input
 
-# if [[ $CREATE_SUPERUSER ]];
-# then
-#   python manage.py createsuperuser --no-input
-# fi
-
-
+# Apply migrations
+python manage.py makemigrations
 python manage.py migrate
+
+# Create superuser only if it doesn't exist
+if [[ $CREATE_SUPERUSER == "True" ]]; then
+  python <<EOF
+import os
+from django.contrib.auth import get_user_model
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "world_champ_2022.settings")
+
+import django
+django.setup()
+
+User = get_user_model()
+username = os.environ["DJANGO_SUPERUSER_USERNAME"]
+email = os.environ["DJANGO_SUPERUSER_EMAIL"]
+password = os.environ["DJANGO_SUPERUSER_PASSWORD"]
+
+if not User.objects.filter(username=username).exists():
+    User.objects.create_superuser(username=username, email=email, password=password)
+    print("✅ Superuser created.")
+else:
+    print("ℹ️ Superuser already exists.")
+EOF
+fi
