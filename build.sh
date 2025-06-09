@@ -16,7 +16,7 @@ if [[ $CREATE_SUPERUSER == "True" ]]; then
   python <<EOF
 import os
 from django.contrib.auth import get_user_model
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "world_champ_2022.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "foodpadi.settings")
 
 import django
 django.setup()
