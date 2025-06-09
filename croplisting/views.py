@@ -11,6 +11,21 @@ class CropListingPermission(permissions.BasePermission):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
+        """
+        Check permissions for a specific object.
+
+        Only farmers can create and edit their own crop listings.
+
+        :param request: The request being made.
+        :type request: Request
+        :param view: The view being used.
+        :type view: View
+        :param obj: The object being accessed.
+        :type obj: CropListing
+        :return: Whether the user has permission to access the object.
+        :rtype: bool
+        """
+        
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.farmer == request.user
