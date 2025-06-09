@@ -25,6 +25,7 @@ User = get_user_model()
 
 phone_number = os.environ["DJANGO_SUPERUSER_PHONE"]
 email = os.environ["DJANGO_SUPERUSER_EMAIL"]
+username = os.environ["DJANGO_SUPERUSER_USERNAME"]
 password = os.environ["DJANGO_SUPERUSER_PASSWORD"]
 first_name = os.environ.get("DJANGO_SUPERUSER_FIRSTNAME", "Admin")
 last_name = os.environ.get("DJANGO_SUPERUSER_LASTNAME", "User")
@@ -34,6 +35,8 @@ if not User.objects.filter(phone_number=phone_number).exists():
     User.objects.create_superuser(
         phone_number=phone_number,
         email=email,
+        username=username,
+        
         password=password,
         first_name=first_name,
         last_name=last_name,
