@@ -36,7 +36,6 @@ if not User.objects.filter(phone_number=phone_number).exists():
         phone_number=phone_number,
         email=email,
         username=username,
-        
         password=password,
         first_name=first_name,
         last_name=last_name,

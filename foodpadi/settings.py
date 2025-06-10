@@ -20,7 +20,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG=config('DEBUG', default=False, cast=bool)
 DEBUG=True
-ALLOWED_HOSTS = ['foodpadi-d0xo.onrender.com', 'localhost', '127.0.0.1', 'foodpadi-nine.vercel.app']
+ALLOWED_HOSTS = ['foodpadi-d0xo.onrender.com', 'localhost', '127.0.0.1', 'foodpadi-theta.vercel.app']
 
 
 CORS_ALLOW_CREDENTIALS = True
@@ -29,7 +29,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://foodpadi-d0xo.onrender.com",
-    'https://foodpadi-nine.vercel.app',
+    'https://foodpadi-theta.vercel.app',
     
 ]
 
@@ -59,7 +59,7 @@ CORS_PREFLIGHT_MAX_AGE = 86400
 # CSRF Configuration (for production)
 CSRF_TRUSTED_ORIGINS = [
     "https://foodpadi-d0xo.onrender.com",
-    'https://foodpadi-nine.vercel.app/',
+    'https://foodpadi-theta.vercel.app',
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
