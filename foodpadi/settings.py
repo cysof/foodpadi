@@ -67,7 +67,6 @@ CORS_PREFLIGHT_MAX_AGE = 86400
 
 # CHANGE 4: Additional CORS settings for better compatibility
 CORS_ALLOW_PRIVATE_NETWORK = True      # ADDED - for private network requests
-CORS_REPLACE_HTTPS_REFERER = True      # ADDED - helps with HTTPS issues
 
 # CSRF Configuration
 CSRF_TRUSTED_ORIGINS = [
