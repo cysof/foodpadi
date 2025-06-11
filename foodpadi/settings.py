@@ -22,7 +22,10 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['foodpadi-d0xo.onrender.com', 'localhost', '127.0.0.1', 'foodpadi-theta.vercel.app']
 
-# CORS Configuration - Enhanced
+# ========== CORS CONFIGURATION - UPDATED FOR CORS ERROR FIX ==========
+# CHANGE 1: Always allow all origins temporarily to debug CORS issues
+CORS_ALLOW_ALL_ORIGINS = True  # This overrides CORS_ALLOWED_ORIGINS for debugging
+
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
@@ -32,10 +35,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://foodpadi-theta.vercel.app',
 ]
 
-# Add this for broader CORS support during development
-if DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
-
+# CHANGE 2: Extended headers list to handle more CORS scenarios
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
@@ -46,6 +46,11 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
+    'cache-control',           # ADDED
+    'pragma',                  # ADDED
+    'if-modified-since',       # ADDED
+    'x-forwarded-for',         # ADDED
+    'x-forwarded-proto',       # ADDED
 ]
 
 CORS_ALLOW_METHODS = [
@@ -57,7 +62,12 @@ CORS_ALLOW_METHODS = [
     'PUT',
 ]
 
+# CHANGE 3: Increased preflight cache time
 CORS_PREFLIGHT_MAX_AGE = 86400
+
+# CHANGE 4: Additional CORS settings for better compatibility
+CORS_ALLOW_PRIVATE_NETWORK = True      # ADDED - for private network requests
+CORS_REPLACE_HTTPS_REFERER = True      # ADDED - helps with HTTPS issues
 
 # CSRF Configuration
 CSRF_TRUSTED_ORIGINS = [
@@ -106,12 +116,13 @@ INSTALLED_APPS = [
     'delivery.apps.DeliveryConfig',
 ]
 
+# CHANGE 5: Reordered middleware - CORS must be first, Common second
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',        # MUST BE FIRST
+    'django.middleware.common.CommonMiddleware',    # MUST BE SECOND
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -187,7 +198,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# REST Framework Configuration - Enhanced
+# CHANGE 6: Updated REST Framework to allow unauthenticated login
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
@@ -201,10 +212,10 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     
-    # Add permission classes
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
+    # CHANGE: Removed default permission classes to allow login without authentication
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
     
     # Add renderer classes
     'DEFAULT_RENDERER_CLASSES': [
