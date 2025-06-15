@@ -10,14 +10,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Production flag
 IS_PRODUCTION = config('IS_PRODUCTION', default=False, cast=bool)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-# Fix: Use proper debug setting based on environment
+
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['foodpadi-d0xo.onrender.com', 'localhost', '127.0.0.1', 'foodpadi-theta.vercel.app']
@@ -197,7 +192,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CHANGE 6: Updated REST Framework to allow unauthenticated login
+
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
@@ -211,12 +206,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     
-    # CHANGE: Removed default permission classes to allow login without authentication
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    # ],
+   
     
-    # Add renderer classes
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],

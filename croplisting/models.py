@@ -2,6 +2,11 @@ from django.db import models
 from accounts.models import FarmPadiUser
 from django.core.exceptions import ValidationError
 
+AVAILABILITY_CROP = (
+    ('AVAILABLE', 'Available'),
+    ('OUT OF STOCK', 'Out of Stock'),
+)
+
 class CropListing(models.Model):
     farmer = models.ForeignKey(FarmPadiUser, on_delete=models.CASCADE, related_name='crop_listings')
     crop_name = models.CharField(max_length=250)
@@ -11,6 +16,8 @@ class CropListing(models.Model):
     location = models.CharField(max_length=250)
     price_per_unit = models.DecimalField(max_digits=10, decimal_places=2)
     harvested_date = models.DateField(help_text="what is the date you harvested your crop")
+    is_Organic = models.BooleanField(default=True)
+    availability = models.CharField(max_length=24, choices=AVAILABILITY_CROP, default='Available')
     img = models.ImageField(upload_to='cropImage/')
     created_at = models.DateTimeField(auto_now_add=True)
 

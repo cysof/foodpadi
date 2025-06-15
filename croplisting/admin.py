@@ -12,7 +12,7 @@ class CropListingAdmin(admin.ModelAdmin):
 
     # Define the fields to display in the detail view
     fieldsets = (
-        (None, {'fields': ('farmer', 'crop_name', 'crop_description', 'quantity', 'unit', 'location', 'price_per_unit', 'harvested_date', 'img')}),
+        (None, {'fields': ('farmer', 'crop_name', 'crop_description', 'quantity', 'unit', 'location', 'price_per_unit', 'harvested_date', 'is_Organic', 'availability', 'img')}),
         ('Audit', {'fields': ('created_at',), 'classes': ('collapse',)}),
     )
 

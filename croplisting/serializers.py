@@ -7,7 +7,7 @@ class CropListingSerializer(serializers.ModelSerializer):
     class Meta:
         model = CropListing
         fields = '__all__'
-        read_only_fields = ['created_at', 'farmer']
+        read_only_fields = ['id','created_at', 'farmer']
 
     def validate(self, attrs):
         request = self.context.get('request')
