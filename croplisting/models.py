@@ -28,7 +28,8 @@ class CropListing(models.Model):
         
         The string representation should include the farmer's name and the crop name.
         """
-        return f'{self.farmer} {self.crop_name}'
+     
+        return f'{self.farmer.first_name} {self.farmer.last_name} - {self.crop_name}'
 
     def clean(self):
         """Validate that only farmers can create crop listings"""
