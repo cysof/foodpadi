@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import CropListing
 from .serializers import CropListingSerializer
 from rest_framework.exceptions import PermissionDenied
+from django.utils.dateparse import parse_date
 
 class CropListingPermission(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -31,7 +32,6 @@ class CropListingPermission(permissions.BasePermission):
         return obj.farmer == request.user
 
 class CropListingViewSet(viewsets.ModelViewSet):
-    queryset = CropListing.objects.all().order_by('-created_at')
     serializer_class = CropListingSerializer
     permission_classes = [CropListingPermission]
 
@@ -43,3 +43,40 @@ class CropListingViewSet(viewsets.ModelViewSet):
             serializer.save(farmer=self.request.user)
         else:
             raise PermissionDenied("Only farmers can create crop listings")
+    
+    def get_queryset(self):
+        """
+        Retrieve a queryset of CropListing objects, optionally filtered by query parameters.
+
+        Filters the queryset based on the query parameters provided in the request:
+        - `location`: Filters by exact match of the location.
+        - `crop_name`: Filters by exact match of the crop name.
+        - `availability`: Filters by exact match of the availability status.
+        - `freshness`: Filters for crops harvested after the specified date.
+        - `is_Organic`: Filters by organic status, case-insensitive.
+
+        Returns:
+            QuerySet: A Django QuerySet of filtered CropListing objects.
+        """
+
+        queryset = CropListing.objects.all().order_by('-created_at')
+        location =self.request.query_params.get('location')
+        freshness =self.request.query_params.get('harvested_date')
+        is_Organic =self.request.query_params.get('is_Organic')
+        availability = self.request.query_params.get('availability')
+        crop_name = self.request.query_params.get('crop_name')
+        
+        if location:
+            queryset = queryset.filter(location__iexact=location)
+        if crop_name:
+            queryset = queryset.filter(crop_name__iexact=crop_name)
+        if availability:
+            queryset = queryset.filter(availability__iexact=availability)
+        if freshness:
+            queryset = queryset.filter(freshness__gt=parse_date(freshness))
+            
+        if is_Organic is not None:
+            queryset = queryset.filter(is_Organic=(is_Organic.lower() == 'true'))
+        
+        return queryset
+            
