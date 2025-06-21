@@ -93,6 +93,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
+    'cloudinary',
     'django.contrib.staticfiles',
     
     #THIRD PARTY APP
@@ -102,8 +104,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_filters',
     'drf_yasg',
-    'cloudinary',
-    'cloudinary_storage',
+    
     
     
     #LOCAL APP
