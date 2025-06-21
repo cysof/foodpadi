@@ -30,6 +30,21 @@ class CropListing(models.Model):
         """
      
         return f'{self.farmer.first_name} {self.farmer.last_name} - {self.crop_name}'
+    
+    @property
+    def image_url(self):
+        """Get the full Cloudinary URL for the image"""
+        if self.img and hasattr(self.img, 'url'):
+            return self.img.url
+        return None
+    
+    @property
+    def thumbnail_url(self):
+        """Get a thumbnail version from Cloudinary"""
+        if self.img:
+            # Cloudinary automatically generates thumbnails
+            return self.img.url.replace('/upload/', '/upload/c_thumb,w_150,h_150/')
+        return None
 
     def clean(self):
         """Validate that only farmers can create crop listings"""
