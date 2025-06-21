@@ -1,29 +1,16 @@
-from rest_framework import viewsets, permissions
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import PermissionDenied
-from django.utils.dateparse import parse_date
+from rest_framework import viewsets
+from rest_framework.permissions import AllowAny
 from .models import CropListing
 from .serializers import CropListingSerializer
+from .permissions import CropListingPermission
+from django.utils.dateparse import parse_date
+from rest_framework.exceptions import PermissionDenied
 
-# ✅ Custom permission class
-class CropListingPermission(permissions.BasePermission):
-    def has_permission(self, request, view):
-        # Allow anyone to view (GET, HEAD, OPTIONS), require login for others
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return request.user and request.user.is_authenticated
 
-    def has_object_permission(self, request, view, obj):
-        # Only allow editing/deleting by the farmer who owns the listing
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return obj.farmer == request.user
-
-# ✅ Main ViewSet
 class CropListingViewSet(viewsets.ModelViewSet):
     serializer_class = CropListingSerializer
     queryset = CropListing.objects.all().order_by('-created_at')
-    permission_classes = [IsAuthenticated, CropListingPermission]
+    permission_classes = [CropListingPermission]
 
     def perform_create(self, serializer):
         user = self.request.user
@@ -33,7 +20,11 @@ class CropListingViewSet(viewsets.ModelViewSet):
             raise PermissionDenied("Only farmers can create crop listings.")
         serializer.save(farmer=user)
 
+
     def get_queryset(self):
+        """
+        Supports filtering by crop_name, location, harvested_date, etc.
+        """
         queryset = CropListing.objects.all().order_by('-created_at')
         params = self.request.query_params
 

@@ -33,9 +33,12 @@ class CropListingSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
     def create(self, validated_data):
-        """
-        Set the farmer to the authenticated user when creating a new listing.
-        """
-        user = self.context['request'].user
-        validated_data['farmer'] = user
+        validated_data['farmer'] = self.context['request'].user
         return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data['farmer'] = self.context['request'].user
+        return super().update(instance, validated_data)
+    
+
+   
